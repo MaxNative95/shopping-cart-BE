@@ -45,34 +45,6 @@ Este repositorio contiene los microservicios backend del sistema de ecommerce, d
 
 ---
 
-## 🐳 Docker & Docker Compose
-
-Para facilitar el desarrollo y ejecución local, todo el sistema puede ser levantado con un solo comando usando Docker Compose.
-
-### Requisitos:
-- Docker
-- Docker Compose
-
-### Comando para levantar el sistema:
-
-```bash
-docker-compose up --build
-Este comando:
-
-Compila y levanta los 3 microservicios
-
-Levanta 3 contenedores de PostgreSQL independientes (uno por servicio)
-
-Expone los puertos:
-
-| Servicio    | Puerto                                    |
-| ----------- | ----------------------------------------- |
-| authapi     | 8081                                      |
-| productsapi | 8082                                      |
-| ordersapi   | 8083                                      |
-| PostgreSQLs | 5432, 5433, 5434 (uno para cada servicio) |
-
-```
 🔒 Seguridad
 
 El authapi genera tokens JWT al hacer login.
