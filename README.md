@@ -1,32 +1,99 @@
-# Getting Started
+# 🧱 Backend Microservices -  Sistema E-commerce 
 
-### Reference Documentation
-For further reference, please consider the following sections:
+Este repositorio contiene los microservicios backend del sistema de ecommerce, desarrollados con **Spring Boot** y organizados bajo una arquitectura de microservicios. Cada servicio tiene su propósito bien definido y se comunica mediante HTTP REST.
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.5.3/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.5.3/maven-plugin/build-image.html)
-* [Spring Web](https://docs.spring.io/spring-boot/3.5.3/reference/web/servlet.html)
-* [Spring Security](https://docs.spring.io/spring-boot/3.5.3/reference/web/spring-security.html)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/3.5.3/reference/data/sql.html#data.sql.jpa-and-spring-data)
-* [Spring Boot DevTools](https://docs.spring.io/spring-boot/3.5.3/reference/using/devtools.html)
+---
 
-### Guides
-The following guides illustrate how to use some features concretely:
+## 📦 Estructura del Proyecto
+/carrito-backend
+│
+├── authapi/ → Servicio de autenticación (login con JWT)
+├── productsapi/ → Gestión del catálogo de productos
+├── ordersapi/ → Creación y consulta de órdenes
+└── docker-compose.yml → Orquesta los servicios y bases de datos 
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
-* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-* [Authenticating a User with LDAP](https://spring.io/guides/gs/authenticating-ldap/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
 
-### Maven Parent overrides
+---
 
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+## 🔧 Microservicios
 
+### 1. **authapi**
+- ⚙️ Framework: Spring Boot
+- 🔐 Autenticación con JWT
+- 📄 Endpoints:
+    - `POST /auth/login`: Login de usuario (retorna JWT)
+- 🗃 Base de datos: PostgreSQL (usuario/contraseña configurables)
+- 📍 Puerto: `8081`
+
+### 2. **productsapi**
+- ⚙️ Framework: Spring Boot
+- 🛒 Gestión de productos: listar, crear, eliminar
+- 📄 Endpoints:
+    - `GET /products`: Listar productos
+    - `POST /products`: Crear un producto
+- 🗃 Base de datos: PostgreSQL
+- 📍 Puerto: `8082`
+
+### 3. **ordersapi**
+- ⚙️ Framework: Spring Boot
+- 📦 Gestión de órdenes (crear y consultar)
+- 📄 Endpoints:
+    - `GET /orders`: Listar todas las órdenes
+    - `POST /orders`: Crear una nueva orden
+- 🗃 Base de datos: PostgreSQL
+- 📍 Puerto: `8083`
+
+---
+
+## 🐳 Docker & Docker Compose
+
+Para facilitar el desarrollo y ejecución local, todo el sistema puede ser levantado con un solo comando usando Docker Compose.
+
+### Requisitos:
+- Docker
+- Docker Compose
+
+### Comando para levantar el sistema:
+
+```bash
+docker-compose up --build
+Este comando:
+
+Compila y levanta los 3 microservicios
+
+Levanta 3 contenedores de PostgreSQL independientes (uno por servicio)
+
+Expone los puertos:
+
+| Servicio    | Puerto                                    |
+| ----------- | ----------------------------------------- |
+| authapi     | 8081                                      |
+| productsapi | 8082                                      |
+| ordersapi   | 8083                                      |
+| PostgreSQLs | 5432, 5433, 5434 (uno para cada servicio) |
+
+```
+🔒 Seguridad
+
+El authapi genera tokens JWT al hacer login.
+
+Los otros microservicios validan el token usando un filtro de autenticación.
+
+El frontend debe incluir el token en el header:
+Authorization: Bearer <jwt_token>
+
+🗃 Variables de entorno
+
+Cada microservicio tiene su propio archivo .env o variables configuradas en application.properties.
+
+Ejemplo (authapi/src/main/resources/application.properties):
+
+spring.datasource.url=jdbc:postgresql://auth-db:5432/authdb
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+jwt.secret=mysecretkey
+
+
+📂 Repositorio relacionado
+
+Frontend del Carrito (React)
